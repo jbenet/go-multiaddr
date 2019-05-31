@@ -23,6 +23,7 @@ const (
 	P_GARLIC64          = 0x01BE
 	P_GARLIC32          = 0x01BF
 	P_P2P_WEBRTC_DIRECT = 0x0114
+	P_MEMORY            = 0x0309 // 777 decimal
 )
 
 var (
@@ -154,6 +155,13 @@ var (
 		Code:  P_P2P_WEBRTC_DIRECT,
 		VCode: CodeToVarint(P_P2P_WEBRTC_DIRECT),
 	}
+	protoMemory = Protocol{
+		Name:       "memory",
+		Code:       P_MEMORY,
+		VCode:      CodeToVarint(P_MEMORY),
+		Size:       64,
+		Transcoder: TranscoderMemory,
+	}
 )
 
 func init() {
@@ -177,6 +185,7 @@ func init() {
 		protoP2P,
 		protoUNIX,
 		protoP2P_WEBRTC_DIRECT,
+		protoMemory,
 	} {
 		if err := AddProtocol(p); err != nil {
 			panic(err)

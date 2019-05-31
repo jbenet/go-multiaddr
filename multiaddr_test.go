@@ -3,6 +3,7 @@ package multiaddr
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"math/rand"
 	"strings"
 	"testing"
@@ -74,6 +75,7 @@ func TestConstructFails(t *testing.T) {
 		"/unix",
 		"/ip4/1.2.3.4/tcp/80/unix",
 		"/ip4/127.0.0.1/tcp/9090/http/p2p-webcrt-direct",
+		fmt.Sprintf("/memory/%d1", uint64(1<<63)),
 		"/",
 		"",
 	}
@@ -149,6 +151,7 @@ func TestConstructSucceeds(t *testing.T) {
 		"/ip4/127.0.0.1/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234/unix/stdio",
 		"/ip4/127.0.0.1/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234/unix/stdio",
 		"/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct",
+		"/memory/4",
 	}
 
 	for _, a := range cases {
