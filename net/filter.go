@@ -1,8 +1,10 @@
-package multiaddr
+package manet
 
 import (
 	"net"
 	"sync"
+
+	ma "github.com/multiformats/go-multiaddr"
 )
 
 // Action is an enum modelling all possible filter actions.
@@ -98,7 +100,7 @@ func (fs *Filters) RemoveLiteral(ipnet net.IPNet) (removed bool) {
 	return false
 }
 
-// AddrBlocked parses a ma.Multiaddr and, if a valid netip is found, it applies the
+// AddrBlocked parses a ma.ma.Multiaddr and, if a valid netip is found, it applies the
 // Filter set rules, returning true if the given address should be denied, and false if
 // the given address is accepted.
 //
@@ -108,17 +110,17 @@ func (fs *Filters) RemoveLiteral(ipnet net.IPNet) (removed bool) {
 // TODO: currently, the last filter to match wins always, but it shouldn't be that way.
 //  Instead, the highest-specific last filter should win; that way more specific filters
 //  override more general ones.
-func (fs *Filters) AddrBlocked(a Multiaddr) (deny bool) {
+func (fs *Filters) AddrBlocked(a ma.Multiaddr) (deny bool) {
 	var (
 		netip net.IP
 		found bool
 	)
 
-	ForEach(a, func(c Component) bool {
+	ma.ForEach(a, func(c ma.Component) bool {
 		switch c.Protocol().Code {
-		case P_IP6ZONE:
+		case ma.P_IP6ZONE:
 			return true
-		case P_IP6, P_IP4:
+		case ma.P_IP6, ma.P_IP4:
 			found = true
 			netip = net.IP(c.RawValue())
 			return false

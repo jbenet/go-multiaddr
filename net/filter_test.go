@@ -1,8 +1,10 @@
-package multiaddr
+package manet
 
 import (
 	"net"
 	"testing"
+
+	ma "github.com/multiformats/go-multiaddr"
 )
 
 func TestFilterListing(t *testing.T) {
@@ -66,7 +68,7 @@ func TestFilterBlocking(t *testing.T) {
 		"/ip6/fd00::2/tcp/321",
 		"/ip6/fc00::1/udp/321",
 	} {
-		maddr, err := NewMultiaddr(blocked)
+		maddr, err := ma.NewMultiaddr(blocked)
 		if err != nil {
 			t.Error(err)
 		}
@@ -82,7 +84,7 @@ func TestFilterBlocking(t *testing.T) {
 		"/ip6/fe00::1/tcp/321",
 		"/ip6/fc00::2/udp/321",
 	} {
-		maddr, err := NewMultiaddr(addr)
+		maddr, err := ma.NewMultiaddr(addr)
 		if err != nil {
 			t.Error(err)
 		}
@@ -112,7 +114,7 @@ func TestFilterWhitelisting(t *testing.T) {
 		"/ip4/1.2.3.254/tcp/123",
 		"/ip4/1.2.3.254/udp/321",
 	} {
-		maddr, err := NewMultiaddr(addr)
+		maddr, err := ma.NewMultiaddr(addr)
 		if err != nil {
 			t.Error(err)
 		}
@@ -128,7 +130,7 @@ func TestFilterWhitelisting(t *testing.T) {
 		"/ip6/fd00::2/tcp/321",
 		"/ip6/fc00::1/udp/321",
 	} {
-		maddr, err := NewMultiaddr(blocked)
+		maddr, err := ma.NewMultiaddr(blocked)
 		if err != nil {
 			t.Error(err)
 		}
@@ -159,7 +161,7 @@ func TestFiltersRemoveRules(t *testing.T) {
 
 	// these are all whitelisted, should be OK
 	for _, addr := range ips {
-		maddr, err := NewMultiaddr(addr)
+		maddr, err := ma.NewMultiaddr(addr)
 		if err != nil {
 			t.Error(err)
 		}
@@ -174,7 +176,7 @@ func TestFiltersRemoveRules(t *testing.T) {
 
 	// Show that they all apply, these are now blacklisted & should fail
 	for _, addr := range ips {
-		maddr, err := NewMultiaddr(addr)
+		maddr, err := ma.NewMultiaddr(addr)
 		if err != nil {
 			t.Error(err)
 		}
@@ -191,7 +193,7 @@ func TestFiltersRemoveRules(t *testing.T) {
 	// our default is reject, so the 1.2.3.0/24 should be rejected now,
 	// along with everything else
 	for _, addr := range ips {
-		maddr, err := NewMultiaddr(addr)
+		maddr, err := ma.NewMultiaddr(addr)
 		if err != nil {
 			t.Error(err)
 		}
