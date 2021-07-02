@@ -62,6 +62,76 @@ func TestConstructFails(t *testing.T) {
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzu:80",
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzuq:-1",
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzu@",
+		"/sam3/8|7|6|6|2|2",
+		"/sam3/0|8|6|6|2|2",
+		"/sam3/0|2|0|6|2|2",
+		"/sam3/0|2|6|0|2|2",
+		"/sam3/0|2|7|6|2|2",
+		"/sam3/0|2|6|7|2|2",
+		"/sam3/0|7|6|6|-1|2",
+		"/sam3/3|0|6|6|2|-1",
+		"/sam3/3|0|6|6|3|2",
+		"/sam3/3|0|6|6|2|3",
+		"/sam3/-1|0|6|6|2|2",
+		"/sam3/3|-1|6|6|2|2",
+		"/sam3/3|2|6|6|-2|2",
+		"/sam3/3|2|6|6|2|-2",
+		"/sam3/3|2|6|6|2|2|7",
+		"/sam3/a|2|6|6|2|2",
+		"/sam3/2|a|6|6|2|2",
+		"/sam3/2|2|a|6|2|2",
+		"/sam3/2|2|6|a|2|2",
+		"/sam3/2|2|6|6|a|2",
+		"/sam3/2|2|6|6|2|a",
+		"/sam3/3|2|6|6|2",
+		"/sam2/8|7|6|6|2|2",
+		"/sam2/0|8|6|6|2|2",
+		"/sam2/0|2|0|6|2|2",
+		"/sam2/0|2|6|0|2|2",
+		"/sam2/0|2|7|6|2|2",
+		"/sam2/0|2|6|7|2|2",
+		"/sam2/0|7|6|6|-1|2",
+		"/sam2/3|0|6|6|2|-1",
+		"/sam2/3|0|6|6|3|2",
+		"/sam2/3|0|6|6|2|3",
+		"/sam2/-1|0|6|6|2|2",
+		"/sam2/3|-1|6|6|2|2",
+		"/sam2/3|2|6|6|-2|2",
+		"/sam2/3|2|6|6|2|-2",
+		"/sam2/3|2|6|6|2|2|7",
+		"/sam2/3|2|6|6|2",
+		"/sam1/8|7|6|6|2|2",
+		"/sam1/0|8|6|6|2|2",
+		"/sam1/0|2|0|6|2|2",
+		"/sam1/0|2|6|0|2|2",
+		"/sam1/0|2|7|6|2|2",
+		"/sam1/0|2|6|7|2|2",
+		"/sam1/0|7|6|6|-1|2",
+		"/sam1/3|0|6|6|2|-1",
+		"/sam1/3|0|6|6|3|2",
+		"/sam1/3|0|6|6|2|3",
+		"/sam1/-1|0|6|6|2|2",
+		"/sam1/3|-1|6|6|2|2",
+		"/sam1/3|2|6|6|-2|2",
+		"/sam1/3|2|6|6|2|-2",
+		"/sam1/3|2|6|6|2|2|7",
+		"/sam1/3|2|6|6|2",
+		"/bob/8|7|6|6|2|2",
+		"/bob/0|8|6|6|2|2",
+		"/bob/0|2|0|6|2|2",
+		"/bob/0|2|6|0|2|2",
+		"/bob/0|2|7|6|2|2",
+		"/bob/0|2|6|7|2|2",
+		"/bob/0|7|6|6|-1|2",
+		"/bob/3|0|6|6|2|-1",
+		"/bob/3|0|6|6|3|2",
+		"/bob/3|0|6|6|2|3",
+		"/bob/-1|0|6|6|2|2",
+		"/bob/3|-1|6|6|2|2",
+		"/bob/3|2|6|6|-2|2",
+		"/bob/3|2|6|6|2|-2",
+		"/bob/3|2|6|6|2|2|7",
+		"/bob/3|2|6|6|2",
 		"/udp/1234/sctp",
 		"/udp/1234/udt/1234",
 		"/udp/1234/utp/1234",
@@ -120,6 +190,18 @@ func TestConstructSucceeds(t *testing.T) {
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzuq/http",
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzuq/tcp/8080",
 		"/garlic32/566niximlxdzpanmn4qouucvua3k7neniwss47li5r6ugoertzuq/udp/8080",
+		"/sam3/0|0|1|1|0|0",
+		"/sam3/4|4|6|6|-1|-1",
+		"/sam3/3|3|6|6|2|2",
+		"/sam2/0|0|1|1|0|0",
+		"/sam2/4|4|6|6|-1|-1",
+		"/sam2/3|3|6|6|2|2",
+		"/sam1/0|0|1|1|0|0",
+		"/sam1/4|4|6|6|-1|-1",
+		"/sam1/3|3|6|6|2|2",
+		"/bob/0|0|1|1|0|0",
+		"/bob/4|4|6|6|-1|-1",
+		"/bob/3|3|6|6|2|2",
 		"/udp/0",
 		"/tcp/0",
 		"/sctp/0",
@@ -188,6 +270,14 @@ func TestEqual(t *testing.T) {
 	m2 := newMultiaddr(t, "/ip4/127.0.0.1/tcp/1234")
 	m3 := newMultiaddr(t, "/ip4/127.0.0.1/tcp/1234")
 	m4 := newMultiaddr(t, "/ip4/127.0.0.1/tcp/1234/")
+	m5 := newMultiaddr(t, "/sam3/4|4|6|6|-1|-1")
+	m6 := newMultiaddr(t, "/sam3/3|3|6|6|2|2")
+	m7 := newMultiaddr(t, "/sam2/4|4|6|6|-1|-1")
+	m8 := newMultiaddr(t, "/sam2/3|3|6|6|2|2")
+	m9 := newMultiaddr(t, "/sam1/4|4|6|6|-1|-1")
+	m10 := newMultiaddr(t, "/sam1/3|3|6|6|2|2")
+	m11 := newMultiaddr(t, "/bob/4|4|6|6|-1|-1")
+	m12 := newMultiaddr(t, "/bob/3|3|6|6|2|2")
 
 	if m1.Equal(m2) {
 		t.Error("should not be equal")
@@ -214,6 +304,22 @@ func TestEqual(t *testing.T) {
 	}
 
 	if !m4.Equal(m3) {
+		t.Error("should be equal")
+	}
+
+	if !m5.Equal(m6) {
+		t.Error("should be equal")
+	}
+
+	if !m7.Equal(m8) {
+		t.Error("should be equal")
+	}
+
+	if !m9.Equal(m10) {
+		t.Error("should be equal")
+	}
+
+	if !m11.Equal(m12) {
 		t.Error("should be equal")
 	}
 }

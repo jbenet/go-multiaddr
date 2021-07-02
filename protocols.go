@@ -27,6 +27,10 @@ const (
 	P_ONION3            = 0x01BD
 	P_GARLIC64          = 0x01BE
 	P_GARLIC32          = 0x01BF
+	P_BOB               = 0x01FE
+	P_SAM3              = 0x0205
+	P_SAM2              = 0x0204
+	P_SAM1              = 0x0203
 	P_P2P_WEBRTC_DIRECT = 0x0114
 	P_TLS               = 0x01c0
 	P_NOISE             = 0x01c6
@@ -154,6 +158,34 @@ var (
 		Size:       LengthPrefixedVarSize,
 		Transcoder: TranscoderGarlic32,
 	}
+	protoBOB = Protocol{
+		Name:       "bob",
+		Code:       P_BOB,
+		VCode:      CodeToVarint(P_BOB),
+		Size:       LengthGarlicBridgeSize,
+		Transcoder: TranscoderGarlicBridge,
+	}
+	protoSAM3 = Protocol{
+		Name:       "sam3",
+		Code:       P_SAM3,
+		VCode:      CodeToVarint(P_SAM3),
+		Size:       LengthGarlicBridgeSize,
+		Transcoder: TranscoderGarlicBridge,
+	}
+	protoSAM2 = Protocol{
+		Name:       "sam2",
+		Code:       P_SAM2,
+		VCode:      CodeToVarint(P_SAM2),
+		Size:       LengthGarlicBridgeSize,
+		Transcoder: TranscoderGarlicBridge,
+	}
+	protoSAM1 = Protocol{
+		Name:       "sam1",
+		Code:       P_SAM1,
+		VCode:      CodeToVarint(P_SAM1),
+		Size:       LengthGarlicBridgeSize,
+		Transcoder: TranscoderGarlicBridge,
+	}
 	protoUTP = Protocol{
 		Name:  "utp",
 		Code:  P_UTP,
@@ -239,6 +271,10 @@ func init() {
 		protoONION3,
 		protoGARLIC64,
 		protoGARLIC32,
+		protoSAM3,
+		protoSAM2,
+		protoSAM1,
+		protoBOB,
 		protoUTP,
 		protoUDT,
 		protoQUIC,

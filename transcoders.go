@@ -291,6 +291,132 @@ func garlic32Validate(b []byte) error {
 	return nil
 }
 
+var LengthGarlicBridgeSize = 2
+var TranscoderGarlicBridge = NewTranscoderFromFunctions(garlicBridgeStB, garlicBridgeBtS, garlicBridgeValidate)
+
+var errorGarlicBridgeUpstreamNegativeHop = fmt.Errorf("A garlic bridge can't have a negative number of hops (your alterator is making this), check upstream.")
+var errorGarlicBridgeDownstreamNegativeHop = fmt.Errorf("A garlic bridge can't have a negative number of hops (your alterator is making this), check downstream.")
+
+func garlicBridgeStB(s string) ([]byte, error) {
+	sl := strings.SplitN(s, "|", 7)
+	if len(sl) != 6 {
+		return nil, fmt.Errorf("A garlic bridge should have 6 params separated by 5 \"|\", not %d.", len(sl))
+	}
+	v1, err := strconv.Atoi(sl[0])
+	if err != nil {
+		return nil, err
+	}
+	if v1 < 0 || v1 > 7 {
+		return nil, fmt.Errorf("A garlic bridge can't have more than 7 hops, not %d, check upstream.", v1)
+	}
+	v2, err := strconv.Atoi(sl[1])
+	if err != nil {
+		return nil, err
+	}
+	if v2 < 0 || v2 > 7 {
+		return nil, fmt.Errorf("A garlic bridge can't have more than 7 hops, not %d, check downstream.", v2)
+	}
+	v3, err := strconv.Atoi(sl[2])
+	if err != nil {
+		return nil, err
+	}
+	if v3 < 1 || v3 > 6 {
+		return nil, fmt.Errorf("A garlic bridge must have 1 up to 6 tunnel, not %d, check upstream.", v3)
+	}
+	v4, err := strconv.Atoi(sl[3])
+	if err != nil {
+		return nil, err
+	}
+	if v4 < 1 || v4 > 6 {
+		return nil, fmt.Errorf("A garlic bridge must have 1 up to 6 tunnel, not %d, check downstream.", v4)
+	}
+	v5, err := strconv.Atoi(sl[4])
+	if err != nil {
+		return nil, err
+	}
+	if v5 < -1 || v5 > 2 {
+		return nil, fmt.Errorf("A garlic bridge alterator must be between -1 and 2 (included), not %d, check upstream.", v5)
+	}
+	if v5 == -1 {
+		if v1 == 0 {
+			return nil, errorGarlicBridgeUpstreamNegativeHop
+		}
+		v1 -= 1
+		v5 = 2
+	}
+	v6, err := strconv.Atoi(sl[5])
+	if err != nil {
+		return nil, err
+	}
+	if v6 < -1 || v6 > 2 {
+		return nil, fmt.Errorf("A garlic bridge alterator must be between -1 and 2 (included), not %d, check downstream.", v6)
+	}
+	if v6 == -1 {
+		if v2 == 0 {
+			return nil, errorGarlicBridgeDownstreamNegativeHop
+		}
+		v2 -= 1
+		v6 = 2
+	}
+
+	return []byte{
+		byte((v1 << 5) + (v2 << 2) + (v3 >> 1)),
+		byte((v3 << 7) + (v4 << 4) + (v5 << 2) + v6),
+	}, nil
+}
+
+func garlicExtractor(b []byte) [6]uint8 {
+	// Don't transform the uint8 in a uint, this stricity is used to colide with
+	// border in conversion.
+	u := [2]uint8{uint8(b[0]), uint8(b[1])}
+	var r [6]uint8
+	r[5] = (u[1] << 6) >> 6
+	r[4] = (u[1] << 4) >> 6
+	r[3] = (u[1] << 1) >> 5
+	r[2] = ((u[0] << 6) >> 5) + (u[1] >> 7)
+	r[1] = (u[0] << 3) >> 5
+	r[0] = u[0] >> 5
+
+	return r
+}
+
+func garlicBridgeBtS(b []byte) (string, error) {
+	err := garlicBridgeValidate(b)
+	if err != nil {
+		return "", err
+	}
+	var rs string
+	for i, e := range garlicExtractor(b) {
+		rs += strconv.Itoa(int(e))
+		if i != 5 {
+			rs += "|"
+		}
+	}
+	return rs, nil
+}
+
+func garlicBridgeValidate(b []byte) error {
+	if len(b) != 2 {
+		return fmt.Errorf("A garlic bridge compiled version length must be 2, not %d.", len(b))
+	}
+	lv := garlicExtractor(b)
+
+	if lv[2] < 1 || lv[2] > 6 {
+		return fmt.Errorf("A garlic bridge must have 1 up to 6 tunnel, not %d, check upstream.", lv[2])
+	}
+	if lv[3] < 1 || lv[3] > 6 {
+		return fmt.Errorf("A garlic bridge must have 1 up to 6 tunnel, not %d, check downstream.", lv[3])
+	}
+	if lv[4] > 2 {
+		return fmt.Errorf("A garlic bridge alterator compiled can't be bigger than 2, not %d, check upstream.", lv[4])
+	}
+	if lv[5] > 2 {
+		return fmt.Errorf("A garlic bridge alterator compiled can't be bigger than 2, not %d, check downstream.", lv[5])
+	}
+
+	return nil
+}
+
 var TranscoderP2P = NewTranscoderFromFunctions(p2pStB, p2pBtS, p2pVal)
 
 // The encoded peer ID can either be a CID of a key or a raw multihash (identity
